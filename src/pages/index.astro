@@ -1,0 +1,74 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import {
+  H1,
+  LeadText,
+  Link,
+  List,
+  Paragraph,
+  SmallText,
+} from "../components/Typography";
+---
+
+<MainLayout title="Stuff Carl Does">
+  <main class="max-w-md mx-auto">
+    <img
+      src="/assets/profile.jpg"
+      alt="Carl's profile picture. He is wearing a two-part black shirt, a combination of necklaces, and has a demure smile."
+      loading="lazy"
+      width="400"
+      height="400"
+      class="w-full h-auto"
+    />
+    <Paragraph>
+      Hey! I'm Carl. I do a lot of things, often well. I'm a product engineer
+      who has been building apps on the web at small companies since 2012, a
+      community builder who makes fit-to-purpose online spaces, and a
+      photographer who likes to take cameras into nature and darkened rooms.
+    </Paragraph>
+
+    <List>
+      <li>
+        <Link href="https://blog.vcarl.com">Technical writing</Link>
+      </li>
+      <li>
+        <Link href="https://photos.app.goo.gl/XU4mKtxc1K7mCLrx7" external>
+          Photography
+        </Link>
+      </li>
+    </List>
+
+    <Paragraph>
+      <Link href="mailto:carl.vitullo+site@gmail.com">email me</Link> or
+      <Link href="https://calendly.com/vcarl/hi">book a call</Link>
+    </Paragraph>
+
+    <List>
+      <li>
+        <Link href="https://bsky.app/profile/vcarl.com">personal bluesky</Link>
+      </li>
+      <li>
+        <Link href="https://bsky.app/profile/photography.vcarl.com">
+          photography bluesky
+        </Link> (some nsfw)
+      </li>
+      <li>
+        <Link href="https://www.instagram.com/vcarl__/">instagram</Link> (private)
+      </li>
+    </List>
+
+    <hr />
+
+    <div class="text-sm">
+      selected projects
+      <List>
+        <li>
+          <Link href="https://discordtimestamps.com" external
+            >Discord timestamps</Link
+          >
+        </li>
+        <li><Link href="/gradient">gradient sampler</Link></li>
+      </List>
+    </div>
+  </main>
+</MainLayout>
