@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viridis Gradient Sampler</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #1a202c;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 0.5rem;
+      border-radius: 0.5rem;
+      background: #e2e8f0;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      background: #4299e1;
+      cursor: pointer;
+    }
+
+    .toggle-switch {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .toggle-track {
+      position: relative;
+      width: 2.75rem;
+      height: 1.5rem;
+      background-color: #e2e8f0;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-indicator {
+      position: absolute;
+      top: 0.125rem;
+      left: 0.125rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      background-color: white;
+      border-radius: 9999px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .toggle-input:checked+.toggle-track {
+      background-color: #4299e1;
+    }
+
+    .toggle-input:checked+.toggle-track .toggle-indicator {
+      transform: translateX(1.25rem);
+    }
+
+    .toggle-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-label {
+      margin-left: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .gradient-display {
+      width: 100%;
+      height: 3rem;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .boundary-indicator {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background-color: white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .boundary-region {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border: 2px solid white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .color-card {
+      border-radius: 0.25rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      cursor: pointer;
+      background-color: white;
+    }
+
+    .color-card:hover {
+      transform: scale(1.05);
+    }
+
+    .color-sample {
+      height: 6rem;
+      width: 100%;
+    }
+
+    .color-info {
+      padding: 0.75rem;
+    }
+
+    .color-value {
+      font-family: monospace;
+      font-size: 0.875rem;
+      word-break: break-all;
+    }
+
+    .color-position {
+      font-size: 0.75rem;
+      color: #718096;
+      text-align: right;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .copied-message {
+      font-size: 0.75rem;
+      color: #38a169;
+      margin-top: 0.25rem;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container" id="app">
+    <h1>Viridis Gradient Color Sampler</h1>
+
+    <div class="form-group">
+      <label>Number of colors: <span id="num-colors-value">5</span></label>
+      <input type="range" id="num-colors" min="2" max="20" value="5">
+    </div>
+
+    <div class="form-group">
+      <div class="two-column">
+        <div>
+          <label>Start boundary: <span id="start-boundary-value">0</span>%</label>
+          <input type="range" id="start-boundary" min="0" max="95" value="0">
+        </div>
+        <div>
+          <label>End boundary: <span id="end-boundary-value">100</span>%</label>
+          <input type="range" id="end-boundary" min="5" max="100" value="100">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="toggle-switch">
+        <input type="checkbox" class="toggle-input" id="format-toggle" checked>
+        <div class="toggle-track">
+          <div class="toggle-indicator"></div>
+        </div>
+        <span class="toggle-label" id="format-label">Showing HEX</span>
+      </label>
+    </div>
+
+    <div class="gradient-display" id="gradient-display">
+      <div
+        style="width: 100%; height: 100%; background: linear-gradient(to right, rgb(68, 1, 84), rgb(72, 40, 120), rgb(62, 73, 137), rgb(49, 104, 142), rgb(38, 130, 142), rgb(31, 158, 137), rgb(53, 183, 121), rgb(109, 205, 89), rgb(180, 222, 44), rgb(253, 231, 37));">
+      </div>
+      <div class="boundary-indicator" id="start-indicator" style="left: 0%;"></div>
+      <div class="boundary-indicator" id="end-indicator" style="left: 100%;"></div>
+      <div class="boundary-region" id="boundary-region" style="left: 0%; width: 100%;"></div>
+    </div>
+
+    <div class="grid" id="color-grid"></div>
+  </div>
+
+  <script>
+    // Viridis color map - These are sampled points from the gradient
+    const viridisBase = [
+      [68, 1, 84],    // Dark purple
+      [72, 40, 120],  // Purple
+      [62, 73, 137],  // Blue
+      [49, 104, 142], // Light blue
+      [38, 130, 142], // Teal
+      [31, 158, 137], // Turquoise
+      [53, 183, 121], // Light green
+      [109, 205, 89], // Green
+      [180, 222, 44], // Yellow-green
+      [253, 231, 37]  // Yellow
+    ];
+
+    // Linear interpolation between two values
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    // Interpolate between two colors
+    const lerpColor = (color1, color2, t) => {
+      return [
+        Math.round(lerp(color1[0], color2[0], t)),
+        Math.round(lerp(color1[1], color2[1], t)),
+        Math.round(lerp(color1[2], color2[2], t))
+      ];
+    };
+
+    // Get color from the viridis gradient at position t (0-1)
+    const getViridisColor = (t) => {
+      // Ensure t is within bounds
+      t = Math.max(0, Math.min(1, t));
+
+      // Find the segment of the gradient
+      const numSegments = viridisBase.length - 1;
+      const segmentIndex = Math.min(Math.floor(t * numSegments), numSegments - 1);
+      const segmentT = (t * numSegments) - segmentIndex;
+
+      // Interpolate between the two colors
+      const color = lerpColor(
+        viridisBase[segmentIndex],
+        viridisBase[segmentIndex + 1],
+        segmentT
+      );
+
+      return color;
+    };
+
+    // Format color as RGB string
+    const rgbString = (color) => `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+
+    // Format color as hex string
+    const hexString = (color) => {
+      return `#${color[0].toString(16).padStart(2, '0')}${color[1].toString(16).padStart(2, '0')}${color[2].toString(16).padStart(2, '0')}`;
+    };
+
+    // DOM elements
+    const numColorsSlider = document.getElementById('num-colors');
+    const numColorsValue = document.getElementById('num-colors-value');
+    const startBoundarySlider = document.getElementById('start-boundary');
+    const startBoundaryValue = document.getElementById('start-boundary-value');
+    const endBoundarySlider = document.getElementById('end-boundary');
+    const endBoundaryValue = document.getElementById('end-boundary-value');
+    const formatToggle = document.getElementById('format-toggle');
+    const formatLabel = document.getElementById('format-label');
+    const colorGrid = document.getElementById('color-grid');
+    const startIndicator = document.getElementById('start-indicator');
+    const endIndicator = document.getElementById('end-indicator');
+    const boundaryRegion = document.getElementById('boundary-region');
+
+    // App state
+    let numColors = 5;
+    let startBoundary = 0;
+    let endBoundary = 100;
+    let showHex = true;
+    let colors = [];
+
+    // Generate colors based on current settings
+    const generateColors = () => {
+      const startT = startBoundary / 100;
+      const endT = endBoundary / 100;
+      const rangeT = endT - startT;
+
+      colors = [];
+      for (let i = 0; i < numColors; i++) {
+        const t = startT + (i / (numColors - 1)) * rangeT;
+        const color = getViridisColor(t);
+        colors.push({
+          rgb: color,
+          rgbStr: rgbString(color),
+          hexStr: hexString(color),
+          t: t
+        });
+      }
+
+      renderColors();
+    };
+
+    // Render colors to the grid
+    const renderColors = () => {
+      colorGrid.innerHTML = '';
+
+      colors.forEach((color, index) => {
+        const card = document.createElement('div');
+        card.className = 'color-card';
+        card.onclick = () => copyToClipboard(showHex ? color.hexStr : color.rgbStr, card);
+
+        const sample = document.createElement('div');
+        sample.className = 'color-sample';
+        sample.style.backgroundColor = color.rgbStr;
+
+        const info = document.createElement('div');
+        info.className = 'color-info';
+
+        const valueContainer = document.createElement('div');
+        valueContainer.className = 'flex justify-between items-center';
+
+        const value = document.createElement('div');
+        value.className = 'color-value';
+        value.textContent = showHex ? color.hexStr : color.rgbStr;
+
+        const position = document.createElement('div');
+        position.className = 'color-position';
+        position.textContent = `${Math.round(color.t * 100)}%`;
+
+        valueContainer.appendChild(value);
+        valueContainer.appendChild(position);
+        info.appendChild(valueContainer);
+
+        card.appendChild(sample);
+        card.appendChild(info);
+        colorGrid.appendChild(card);
+      });
+    };
+
+    // Copy color value to clipboard
+    const copyToClipboard = (text, element) => {
+      navigator.clipboard.writeText(text).then(() => {
+        // Remove any existing copied messages
+        const existingMessages = document.querySelectorAll('.copied-message');
+        existingMessages.forEach(msg => msg.remove());
+
+        // Add copied message
+        const message = document.createElement('div');
+        message.className = 'copied-message';
+        message.textContent = 'Copied to clipboard!';
+        element.querySelector('.color-info').appendChild(message);
+
+        // Remove message after delay
+        setTimeout(() => {
+          message.remove();
+        }, 1500);
+      });
+    };
+
+    // Update UI based on current values
+    const updateUI = () => {
+      numColorsValue.textContent = numColors;
+      startBoundaryValue.textContent = startBoundary;
+      endBoundaryValue.textContent = endBoundary;
+      formatLabel.textContent = showHex ? 'Showing HEX' : 'Showing RGB';
+
+      // Update boundary indicators
+      startIndicator.style.left = `${startBoundary}%`;
+      endIndicator.style.left = `${endBoundary}%`;
+      boundaryRegion.style.left = `${startBoundary}%`;
+      boundaryRegion.style.width = `${endBoundary - startBoundary}%`;
+    };
+
+    // Event listeners
+    numColorsSlider.addEventListener('input', (e) => {
+      numColors = parseInt(e.target.value);
+      updateUI();
+      generateColors();
+    });
+
+    startBoundarySlider.addEventListener('input', (e) => {
+      startBoundary = parseInt(e.target.value);
+      if (endBoundary < startBoundary + 5) {
+        endBoundary = Math.min(100, startBoundary + 5);
+        endBoundarySlider.value = endBoundary;
+      }
+      updateUI();
+      generateColors();
+    });
+
+    endBoundarySlider.addEventListener('input', (e) => {
+      endBoundary = parseInt(e.target.value);
+      if (startBoundary > endBoundary - 5) {
+        startBoundary = Math.max(0, endBoundary - 5);
+        startBoundarySlider.value = startBoundary;
+      }
+      updateUI();
+      generateColors();
+    });
+
+    formatToggle.addEventListener('change', (e) => {
+      showHex = e.target.checked;
+      updateUI();
+      renderColors();
+    });
+
+    // Initialize
+    updateUI();
+    generateColors();
+  </script>
+</body>
+
+</html>
