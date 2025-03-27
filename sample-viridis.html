@@ -211,6 +211,10 @@
 <body>
   <div class="container" id="app">
     <h1>Viridis Gradient Color Sampler</h1>
+    <p style="margin-bottom: 1.5rem; font-size: 0.875rem; color: #4a5568;">
+      Sample colors along the Viridis gradient with customizable boundaries. Your settings are automatically saved to
+      the URL for easy sharing.
+    </p>
 
     <div class="form-group">
       <label>Number of colors: <span id="num-colors-value">5</span></label>
@@ -253,6 +257,41 @@
   </div>
 
   <script>
+    // Function to update URL with current state
+    function updateURL() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('colors', numColors);
+      url.searchParams.set('start', startBoundary);
+      url.searchParams.set('end', endBoundary);
+      url.searchParams.set('hex', showHex ? '1' : '0');
+      window.history.replaceState({}, '', url);
+    }
+
+    // Function to load state from URL
+    function loadFromURL() {
+      const params = new URLSearchParams(window.location.search);
+
+      if (params.has('colors')) {
+        numColors = parseInt(params.get('colors'));
+        numColorsSlider.value = numColors;
+      }
+
+      if (params.has('start')) {
+        startBoundary = parseInt(params.get('start'));
+        startBoundarySlider.value = startBoundary;
+      }
+
+      if (params.has('end')) {
+        endBoundary = parseInt(params.get('end'));
+        endBoundarySlider.value = endBoundary;
+      }
+
+      if (params.has('hex')) {
+        showHex = params.get('hex') === '1';
+        formatToggle.checked = showHex;
+      }
+    }
+
     // Viridis color map - These are sampled points from the gradient
     const viridisBase = [
       [68, 1, 84],    // Dark purple
@@ -425,6 +464,7 @@
       numColors = parseInt(e.target.value);
       updateUI();
       generateColors();
+      updateURL();
     });
 
     startBoundarySlider.addEventListener('input', (e) => {
@@ -435,6 +475,7 @@
       }
       updateUI();
       generateColors();
+      updateURL();
     });
 
     endBoundarySlider.addEventListener('input', (e) => {
@@ -445,17 +486,40 @@
       }
       updateUI();
       generateColors();
+      updateURL();
     });
 
     formatToggle.addEventListener('change', (e) => {
       showHex = e.target.checked;
       updateUI();
       renderColors();
+      updateURL();
     });
 
     // Initialize
+    // Load settings from URL if available
+    loadFromURL();
     updateUI();
     generateColors();
+
+    // Add share button functionality
+    const shareButton = document.createElement('button');
+    shareButton.textContent = 'Copy Shareable URL';
+    shareButton.style.cssText = 'margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #4299e1; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem;';
+
+    shareButton.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const originalText = shareButton.textContent;
+        shareButton.textContent = 'Copied!';
+        setTimeout(() => {
+          shareButton.textContent = originalText;
+        }, 2000);
+      });
+    });
+
+    // Insert share button before the gradient display
+    const gradientDisplay = document.getElementById('gradient-display');
+    gradientDisplay.parentNode.insertBefore(shareButton, gradientDisplay);
   </script>
 </body>
 
