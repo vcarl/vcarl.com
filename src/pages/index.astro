@@ -1,31 +1,119 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import {
-  H1,
-  LeadText,
-  Link,
-  List,
-  Paragraph,
-  Project,
-  SmallText,
-} from "../components/Typography";
+import { Link, List, Paragraph, Project } from "../components/Typography";
 ---
 
-<MainLayout title="Stuff Carl Does">
+<MainLayout title="Carl Vitullo – product engineering, community, AI agents">
   <main class="max-w-md mx-auto">
     <img
       src="/assets/profile.jpg"
-      alt="Carl's profile picture. He is wearing a two-part black shirt, a combination of necklaces, and has a demure smile."
+      alt="Carl's profile picture. He has curly hair and glasses, is wearing an orange patterned shirt, and has a demure smile."
       loading="lazy"
       width="400"
       height="400"
       class="w-full h-auto"
     />
     <Paragraph>
-      Hey! I'm Carl. I do a lot of things, often well. I'm a product engineer
-      who has been building apps on the web at small companies since 2012, a
-      community builder who makes fit-to-purpose online spaces, and a
-      photographer who likes to take cameras into nature and darkened rooms.
+      Hey! I'm Carl. I've been building for the web at small companies since
+      2012 as a product engineer. I run Reactiflux, one of the largest React
+      communities, and build the tools that keep it running. Lately I build AI
+      agent systems: orchestration, memory, and benchmarking local models.
+    </Paragraph>
+
+    <Paragraph>
+      I consult through Vitullo Consulting on product engineering, developer
+      communities people actually use, and putting AI agents to real work.
+      <Link href="mailto:carl.vitullo+site@gmail.com">Email me</Link> or
+      <Link href="https://calendly.com/vcarl/hi">book a call</Link>.
+    </Paragraph>
+
+    <div class="text-sm">
+      <div class="font-semibold mt-4">community</div>
+      <List>
+        <Project
+          name="Reactiflux"
+          href="https://www.reactiflux.com"
+          code="https://github.com/reactiflux/reactiflux.com"
+          >the React community I run</Project
+        >
+        <Project
+          name="Euno"
+          href="https://euno.reactiflux.com"
+          code="https://github.com/Euno-HQ/discord"
+          >moderation tools for Discord communities</Project
+        >
+        <Project
+          name="This Month in React"
+          href="https://tmir.reactiflux.com"
+          code="https://github.com/reactiflux/tmir.reactiflux.com"
+        />
+        <Project
+          name="Discord Simulator"
+          href="https://vcarl.github.io/discord-game/"
+          code="https://github.com/vcarl/discord-game"
+          >a game about running a Discord community</Project
+        >
+      </List>
+
+      <div class="font-semibold mt-4">AI agents</div>
+      <List>
+        <Project name="roci" code="https://github.com/vcarl/roci"
+          >character-driven agent orchestrator</Project
+        >
+        <Project name="sm-autopilot" code="https://github.com/vcarl/sm-autopilot"
+          >an agent that plays SpaceMolt unattended for weeks by writing its own
+          programs</Project
+        >
+        <Project name="kareda" code="https://github.com/vcarl/kareda"
+          >agent memory driven by the model's own internals</Project
+        >
+        <Project
+          name="llm-bench"
+          href="https://vcarl.github.io/benchmark-local-llms/"
+          code="https://github.com/vcarl/benchmark-local-llms"
+          >benchmarking local LLMs</Project
+        >
+        <Project
+          name="SpaceMolt"
+          href="https://www.spacemolt.com"
+          code="https://github.com/SpaceMolt"
+          >an MMO for AI agents (contributor)</Project
+        >
+        <Project name="sm-cli" code="https://github.com/vcarl/sm-cli"
+          >early SpaceMolt client that proved out <code
+            class="font-mono text-[0.85em]">@spacemolt/lib</code
+          >, maintained by roci</Project
+        >
+        <Project
+          name="session-commit"
+          code="https://github.com/vcarl/session-commit"
+          >Claude Code session logs as commit descriptions</Project
+        >
+      </List>
+
+      <div class="font-semibold mt-4">small tools</div>
+      <List>
+        <Project
+          name="remark-headings"
+          code="https://github.com/vcarl/remark-headings"
+        />
+        <Project
+          name="Discord timestamps"
+          href="https://discordtimestamps.com"
+          code="https://github.com/vcarl/discord-timestamps"
+        />
+        <Project
+          name="gradient sampler"
+          href="/gradient"
+          code="https://github.com/vcarl/vcarl.com/tree/main/src/components/gradient"
+        />
+      </List>
+    </div>
+
+    <hr />
+
+    <Paragraph>
+      Off the clock, I write and I take cameras into nature and darkened rooms.
     </Paragraph>
 
     <List>
@@ -37,14 +125,6 @@ import {
           Photography
         </Link>
       </li>
-    </List>
-
-    <Paragraph>
-      <Link href="mailto:carl.vitullo+site@gmail.com">email me</Link> or
-      <Link href="https://calendly.com/vcarl/hi">book a call</Link>
-    </Paragraph>
-
-    <List>
       <li>
         <Link href="https://bsky.app/profile/vcarl.com">personal bluesky</Link>
       </li>
@@ -57,72 +137,5 @@ import {
         <Link href="https://www.instagram.com/vcarl__/">instagram</Link> (private)
       </li>
     </List>
-
-    <hr />
-
-    <div class="text-sm">
-      selected projects
-      <List>
-        <Project
-          name="Reactiflux"
-          href="https://www.reactiflux.com"
-          code="https://github.com/reactiflux/reactiflux.com"
-          >the website for my React community</Project
-        >
-        <Project
-          name="remark-headings"
-          code="https://github.com/vcarl/remark-headings"
-        />
-        <Project
-          name="Euno"
-          href="https://euno.reactiflux.com"
-          code="https://github.com/Euno-HQ/discord"
-          >moderation tools for Discord communities</Project
-        >
-        <Project
-          name="Discord timestamps"
-          href="https://discordtimestamps.com"
-          code="https://github.com/vcarl/discord-timestamps"
-        />
-        <Project
-          name="gradient sampler"
-          href="/gradient"
-          code="https://github.com/vcarl/vcarl.com/tree/main/src/components/gradient"
-        />
-        <Project
-          name="SpaceMolt"
-          href="https://www.spacemolt.com"
-          code="https://github.com/SpaceMolt"
-          >an MMO for AI agents (contributor)</Project
-        >
-        <Project name="sm-cli" code="https://github.com/vcarl/sm-cli"
-          >early SpaceMolt client that proved out <code
-            class="font-mono text-[0.85em]">@spacemolt/lib</code
-          >, maintained by roci</Project
-        >
-        <Project name="roci" code="https://github.com/vcarl/roci"
-          >character-driven agent orchestrator</Project
-        >
-        <Project
-          name="llm-bench"
-          href="https://vcarl.github.io/benchmark-local-llms/"
-          code="https://github.com/vcarl/benchmark-local-llms"
-          >benchmarking local LLMs</Project
-        >
-        <Project
-          name="session-commit"
-          code="https://github.com/vcarl/session-commit"
-          >Claude Code session logs as commit descriptions</Project
-        >
-        <Project
-          name="This Month in React"
-          href="https://tmir.reactiflux.com"
-          code="https://github.com/reactiflux/tmir.reactiflux.com"
-        />
-        <Project name="kareda" code="https://github.com/vcarl/kareda"
-          >agent memory driven by the model's own internals</Project
-        >
-      </List>
-    </div>
   </main>
 </MainLayout>
