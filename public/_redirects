@@ -1,4 +1,3 @@
 # Sashay (github.com/vcarl/sashay) is deployed as its own Netlify site and
 # proxied here. It must be built with a base path of /sashay/.
-/sashay    /sashay/    301
 /sashay/*  https://vcarl-sashay.netlify.app/:splat  200!
