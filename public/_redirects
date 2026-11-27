@@ -1,3 +1,8 @@
 # Sashay (github.com/vcarl/sashay) is deployed as its own Netlify site and
 # proxied here. It must be built with a base path of /sashay/.
 /sashay/*  https://vcarl-sashay.netlify.app/:splat  200!
+
+# Benchmark report is static on GitHub Pages (github.com/vcarl/benchmark-local-llms)
+# and proxied here; its JS/CSS/JSON load from the Pages origin directly.
+/evals    https://vcarl.github.io/benchmark-local-llms/         200
+/evals/*  https://vcarl.github.io/benchmark-local-llms/:splat   200
