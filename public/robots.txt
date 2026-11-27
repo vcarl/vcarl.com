@@ -1,0 +1,4 @@
+# Agent-readable benchmark data: https://vcarl.com/evals/llms.txt
+User-agent: *
+Allow: /
+Allow: /evals/

@@ -1,0 +1,7 @@
+# vcarl.com
+
+> Personal site of Carl Vitullo.
+
+## Projects
+
+- [Local LLM benchmark](https://vcarl.com/evals/llms.txt): results of local language models on one workstation, as markdown for agents
